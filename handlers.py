@@ -99,7 +99,7 @@ class ApiService(BaseHandler):
         xml += (' <Title>Find Tile Map Service</Title>')
         xml += (' <Abstract></Abstract>')
         xml += (' <TileMaps>')
-        directory = os.path.join("baselayers","*")
+        directory = os.path.join(config.LAYER_DIR,"*")
         baselayers = glob.glob(directory)
         for baselayer in baselayers:
             layer = os.path.basename(baselayer)
@@ -111,7 +111,7 @@ class ApiService(BaseHandler):
 
 class ApiTileMap(BaseHandler):
     def get(self, layer):
-        folder = os.path.join("baselayers",layer)
+        folder = os.path.join(config.LAYER_DIR,layer)
         if not os.path.exists(folder):
             raise ValueError("files not found")
         baseURL = '/tms/1.0/' + layer
@@ -140,7 +140,7 @@ class ApiTile(BaseHandler):
 
     @run_on_executor
     def background_task(self, layer_id, z, x, y):
-        folder = os.path.join("baselayers",layer_id)
+        folder = os.path.join(config.LAYER_DIR,layer_id)
         if not os.path.exists(folder):
             raise ValueError("files not found")
         
@@ -148,7 +148,7 @@ class ApiTile(BaseHandler):
             # Create map
             m = mapnik.Map(tile.TILE_WIDTH, tile.TILE_HEIGHT)
             # Load mapnik xml stylesheet
-            stylesheet = os.path.join("baselayers", str(layer_id),"style.xml")
+            stylesheet = os.path.join(config.LAYER_DIR, str(layer_id), config.STYLESHEET)
             mapnik.load_map(m, stylesheet)
             # Zoom to all features
             m.zoom_all()
