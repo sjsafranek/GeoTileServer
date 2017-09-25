@@ -1,0 +1,14 @@
+{
+"type": "FeatureCollection",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+                                                                                
+"features": [
+{ "type": "Feature", "properties": { "NBR": "1", "COD": "CC", "FULL_NAME": "Council Crest", "LAT": "45.499278", "LON": "-122.708417" }, "geometry": { "type": "Point", "coordinates": [ -122.708417, 45.499278 ] } },
+{ "type": "Feature", "properties": { "NBR": "2", "COD": "MS", "FULL_NAME": "Mount Scott", "LAT": "45.454833", "LON": "-122.550639" }, "geometry": { "type": "Point", "coordinates": [ -122.550639, 45.454833 ] } },
+{ "type": "Feature", "properties": { "NBR": "3", "COD": "PM", "FULL_NAME": "Pete's Mtn.", "LAT": "45.344000", "LON": "-122.693972" }, "geometry": { "type": "Point", "coordinates": [ -122.693972, 45.344 ] } },
+{ "type": "Feature", "properties": { "NBR": "4", "COD": "Po", "FULL_NAME": "Polivka", "LAT": "45.434208", "LON": "-122.389664" }, "geometry": { "type": "Point", "coordinates": [ -122.389664, 45.434208 ] } },
+{ "type": "Feature", "properties": { "NBR": "5", "COD": "Lv", "FULL_NAME": "Livingston", "LAT": "45.678611", "LON": "-122.367778" }, "geometry": { "type": "Point", "coordinates": [ -122.367778, 45.678611 ] } },
+{ "type": "Feature", "properties": { "NBR": "6", "COD": "BP", "FULL_NAME": "Bald Peak", "LAT": "45.389200", "LON": "-123.050875" }, "geometry": { "type": "Point", "coordinates": [ -123.050875, 45.3892 ] } },
+{ "type": "Feature", "properties": { "NBR": "7", "COD": "Hb", "FULL_NAME": "Hillsboro", "LAT": "45.521306", "LON": "-122.969806" }, "geometry": { "type": "Point", "coordinates": [ -122.969806, 45.521306 ] } }
+]
+}

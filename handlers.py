@@ -5,12 +5,11 @@ import os
 import glob
 import json
 from PIL import Image
-# from io import StringIO
 from io import BytesIO
 import mapnik
+import tornado.gen
 import tornado.web
 from tornado.web import RequestHandler
-# from multiprocessing.pool import ThreadPool
 from tornado.concurrent import run_on_executor
 from concurrent.futures import ThreadPoolExecutor
 
@@ -143,7 +142,7 @@ class ApiTile(BaseHandler):
         folder = os.path.join(config.LAYER_DIR,layer_id)
         if not os.path.exists(folder):
             raise ValueError("files not found")
-        
+
         if not Maps.hasMap(layer_id):
             # Create map
             m = mapnik.Map(tile.TILE_WIDTH, tile.TILE_HEIGHT)

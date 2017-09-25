@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Map srs="+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs">
+  <Style name="Point Style">
+    <Rule>
+      <MarkersSymbolizer fill="rgb(0,0,0)" width="3" height="3"/>
+    </Rule>
+  </Style>
+  <Style name="Polygon Style">
+    <Rule>
+      <PolygonSymbolizer fill="rgb(242,239,249)"/>
+      <LineSymbolizer stroke="rgb(0,0,0)" stroke-width="0.1"/>
+    </Rule>
+  </Style>
+  <Layer name="Layer" srs="+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs">
+    <StyleName>Polygon Style</StyleName>
+    <StyleName>LineString Style</StyleName>
+    <StyleName>Point Style</StyleName>
+    <Datasource>
+      <Parameter name="file">world_merc.shp</Parameter>
+      <Parameter name="type">shape</Parameter>
+    </Datasource>
+  </Layer>
+</Map>

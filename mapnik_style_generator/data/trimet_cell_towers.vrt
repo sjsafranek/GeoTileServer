@@ -1,0 +1,8 @@
+<OGRVRTDataSource>
+    <OGRVRTLayer name="trimet_cell_towers">
+        <SrcDataSource>trimet_cell_towers.csv</SrcDataSource>
+        <GeometryType>wkbPoint</GeometryType>
+        <LayerSRS>WGS84</LayerSRS>
+        <GeometryField encoding="PointFromColumns" x="LON" y="LAT"/>
+    </OGRVRTLayer>
+</OGRVRTDataSource> 
