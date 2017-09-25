@@ -27,7 +27,14 @@ if not os.path.exists(config.CACHE_DIR):
 
 
 def cache_map_tile(img, layer, z, x, y):
-
+    ''' @method cache_map_tile
+        @description writes map tile to disk
+        @param img {mapnik.Image} - mapnik Image to save to disk
+        @param layer {str} - layer id/name
+        @param z {int} - tile zoom
+        @param x {int} - tile column
+        @param y {int} - tile row
+    '''
     layer_dir = '{0}/{1}'.format(config.CACHE_DIR, layer)
     if not os.path.exists(layer_dir):
         os.mkdir(layer_dir)
@@ -45,6 +52,16 @@ def cache_map_tile(img, layer, z, x, y):
 
 
 def get_cached_map_tile(layer, z, x, y):
+    ''' @method get_cached_map_tile
+        @description fetches map tile from disk. Returns None if file is not found/
+        @param layer {str} - layer id/name
+        @param z {int} - tile zoom
+        @param x {int} - tile column
+        @param y {int} - tile row
+        @returns Image.Image
+        TODO:
+            - Return mapnik.Image
+    '''
     filename = '{0}/{1}/{2}/{3}/{4}.png'.format(config.CACHE_DIR, layer, z, x, y)
     if os.path.exists(filename):
         return Image.open(filename)
@@ -55,7 +72,8 @@ def get_cached_map_tile(layer, z, x, y):
 
 class MainHandler(RequestHandler):
     def get(self):
-        self.write("PyTileServer")
+        # source: http://patorjk.com/software/taag/#p=display&f=Slant&t=GeoTileServer
+        self.write("GeoTileServer")
 
 
 class BaseHandler(RequestHandler):

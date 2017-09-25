@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-""" 
+"""
     Source:
         https://github.com/rshk/render-tiles
 
@@ -12,7 +12,7 @@ import mapnik
 
 
 # ============================================================
-#                      MAP TILE SETTINGS                      
+#                      MAP TILE SETTINGS
 # ============================================================
 
 MIN_ZOOM_LEVEL = 1
@@ -54,7 +54,7 @@ def num2deg(xtile, ytile, zoom):
 # ============================================================
 
 class TiledMapRenderer(object):
-    """ Mapnik Slippy Map - Tile Renderer 
+    """ Mapnik Slippy Map - Tile Renderer
     """
     def __init__(self, mapobj):
         self.m = mapobj
@@ -110,15 +110,15 @@ class TiledMapRenderer(object):
 
 
 class TiledMaps(object):
-    
+
     def __init__(self):
         self._mmaps = {}
-    
+
     def addMap(self, layer_id, m_map):
         if self.hasMap(layer_id):
             raise ValueError(layer_id, 'already exists')
         self._mmaps[layer_id] = TiledMapRenderer(m_map)
-    
+
     def getMap(self, layer_id):
         if self.hasMap(layer_id):
             return self._mmaps[layer_id]
