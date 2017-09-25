@@ -1,0 +1,71 @@
+<html>
+	<head>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+		<script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+
+		<style>
+			#map {
+				height:100%;
+				width:100%;
+			}
+		</style>
+
+	</head>
+	<body>
+		<div id="map"></div>
+	</body>
+	<script type="text/javascript">
+
+		var map,
+			baseLayers;
+		var server = 'http://localhost:8080';
+
+		// createTileLayer creates leaflet tilelayer from url
+		function createTileLayer(url) {
+			return L.tileLayer(url, {
+				attribution: '&copy; <a href="https://github.com/sjsafranek/go-mapnik" target="_blank"> Go-Mapnik </a>',
+				reuseTiles: true
+			});
+		}
+
+		function initialize() {
+
+			baseLayers = {
+				"OpenStreetMap": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+					attribution: '&copy; <a href="http://osm.org/copyright" target="_blank">OpenStreetMap</a> contributors',
+					reuseTiles: true
+				})
+			}
+
+			map = L.map('map',{
+				maxZoom:20,
+				layers: [
+					baseLayers['OpenStreetMap']
+				]
+			}).setView([0,0], 2);
+
+
+			var layers = [
+				'world',
+				'world_population'
+			]
+
+			for (var i=0; i<layers.length; i++) {
+				var url = server + '/tms/1.0/' + layers[i] + '/{z}/{x}/{y}.png';
+				baseLayers[layers[i]] = createTileLayer(url);
+			}
+
+			// Use `baseLayers` to create a leaflet layer control
+			// and add to map.
+			var layer_control = L.control.layers(baseLayers, {});
+			layer_control.addTo(map);
+
+		}
+
+		$(document).ready(initialize);
+
+
+	</script>
+</html>
