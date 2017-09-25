@@ -95,6 +95,7 @@ class BaseHandler(RequestHandler):
             self.write(content)
 
 
+# https://wiki.osgeo.org/wiki/Tile_Map_Service_Specification
 
 class ApiRoot(BaseHandler):
     def get(self):
