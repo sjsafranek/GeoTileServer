@@ -2,8 +2,10 @@
 
 
 import os
+from os import getpid
 import glob
 import json
+import uuid
 from PIL import Image
 from io import BytesIO
 import mapnik
@@ -77,6 +79,12 @@ class MainHandler(RequestHandler):
 
 
 class BaseHandler(RequestHandler):
+
+    def generateRequestId(self):
+        self.request_id  = uuid.uuid4()
+
+    def getRequestId(self):
+        return self.request_id
 
     def sendXmlResponse(self, xml_data):
         self.set_status(200)
@@ -171,15 +179,21 @@ class ApiTile(BaseHandler):
             # Zoom to all features
             m.zoom_all()
             # Render Map Tile
-            # renderer = tile.TiledMapRenderer(m)
             Maps.addMap(layer_id, m)
 
+        job_id = self.getRequestId()
+
         renderer = Maps.getMap(layer_id)
-        im = renderer.renderTile(z, x, y)
+        im = renderer.renderTile(z, x, y, job_id)
         return im
 
     @tornado.gen.coroutine
     def get(self, layer, z, x, y):
+        # TODO:
+        #  - Move to __init__()
+        self.generateRequestId()
+        self.layer_id = layer
+
         z = int(z)
         x = int(x)
         y = y.replace('.png', '')
@@ -203,3 +217,5 @@ class ApiTile(BaseHandler):
     def on_connection_close(self):
         # TODO: cancel tile rendering
         print('closed', self)
+        Maps.getMap(self.layer_id).cancelTile(
+                                self.getRequestId())
