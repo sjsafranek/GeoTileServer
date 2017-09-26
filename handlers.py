@@ -11,6 +11,7 @@ from io import BytesIO
 import mapnik
 import tornado.gen
 import tornado.web
+from tornado.web import asynchronous
 from tornado.web import RequestHandler
 from tornado.concurrent import run_on_executor
 from concurrent.futures import ThreadPoolExecutor
@@ -164,6 +165,11 @@ class ApiTile(BaseHandler):
     # https://gist.github.com/methane/2185380
     executor = ThreadPoolExecutor(max_workers=config.MAX_WORKERS)
 
+    # def sendTile(self, tile):
+        # cache_map_tile(tile, layer, z, x, y)
+        # Return image
+        # self.sendPngResponse(tile)
+
     @run_on_executor
     def background_task(self, layer_id, z, x, y):
         folder = os.path.join(config.LAYER_DIR,layer_id)
@@ -184,9 +190,11 @@ class ApiTile(BaseHandler):
         job_id = self.getRequestId()
 
         renderer = Maps.getMap(layer_id)
+        # im = renderer.renderTile(z, x, y, job_id)
         im = renderer.renderTile(z, x, y, job_id)
         return im
 
+    @asynchronous
     @tornado.gen.coroutine
     def get(self, layer, z, x, y):
         # TODO:
@@ -204,6 +212,7 @@ class ApiTile(BaseHandler):
             self.sendPngResponse(im)
             return
 
+
         im = yield self.background_task(layer, z, x, y)
 
         # save map tile
@@ -219,3 +228,4 @@ class ApiTile(BaseHandler):
         print('closed', self)
         Maps.getMap(self.layer_id).cancelTile(
                                 self.getRequestId())
+        # self.finish()

@@ -1,9 +1,12 @@
 #!/usr/bin/python3
+import time
 try:
     import queue
 except ImportError:
     import Queue as queue
 import multiprocessing
+from threading import Event
+from threading import Thread
 from os import getpid
 import mapnik
 
@@ -13,11 +16,12 @@ pool = {}
 
 class TileWorker(multiprocessing.Process):
 
-    def __init__(self, mmap, image, job_queue):
+    def __init__(self, mmap, image, job_queue, stop_event):
         multiprocessing.Process.__init__(self)
         self.mmap = mmap
         self.image = image
         self.queue = job_queue
+        self.event = stop_event
         # self.job_id = job_id
 
     def run(self):
@@ -27,22 +31,68 @@ class TileWorker(multiprocessing.Process):
         print('{0} finished'.format(pid))
         self.queue.put(self.image)
         print('{0} done'.format(pid))
-        # print(dir(self))
-        # print(self.queue.qsize())
+        self.event.set()
         return
 
 
+
+def get_tile(mmap, image, result, stop_event):
+    print('get_tile begin', getpid())
+    mapnik.render(mmap, image)
+    print('get_tile end', getpid())
+    stop_event.set()
+    result['tile'] = image
+
+#
+# def RenderTile(job_id, mmap, image):
+#     print('RenderTile',getpid())
+#     thread_return = {'tile': None}
+#     thread = Thread(target=get_tile, args=(mmap, image, thread_return,))
+#     pool[job_id] = thread
+#     pool[job_id].start()
+#     pool[job_id].join()
+#     # queue = multiprocessing.Queue()
+#     # job_queue = queue.Queue()
+#     # process = TileWorker(mmap, image, job_queue)
+#     # pool[job_id] = process
+#     # process.start()
+#     # process.join()
+#     # tile = process.get_tile()
+#     # del pool[job_id]
+#     # image = job_queue.get()
+#     print(thread_return['tile'])
+#     return thread_return['tile']
+#
+
+
+#
 def RenderTile(job_id, mmap, image):
+    print('RenderTile',getpid())
     # queue = multiprocessing.Queue()
-    job_queue = queue.Queue()
-    process = TileWorker(mmap, image, job_queue)
-    pool[job_id] = process
-    process.start()
-    process.join()
-    del pool[job_id]
-    image = job_queue.get()
-    print(image)
-    return image
+
+    result = {'tile': None}
+    stop_event = Event()
+    thread = Thread(target=get_tile, args=(mmap, image, result, stop_event,))
+    pool[job_id] = thread
+    pool[job_id].start()
+    # pool[job_id].join()
+    # while not stop_event.is_set():
+        # time.sleep(0.1)
+    stop_event.wait()
+    return result['tile']
+
+    # job_queue = queue.Queue()
+    # stop_event = Event()
+    # process = TileWorker(mmap, image, job_queue, stop_event)
+    # pool[job_id] = process
+    # process.start()
+    # # process.join()
+    # while not stop_event.is_set():
+    #     time.sleep(0.1)
+    # del pool[job_id]
+    # tile = job_queue.get()
+    # return tile
+
 
 
 def CancelTileRender(job_id):
@@ -50,22 +100,3 @@ def CancelTileRender(job_id):
         pool[job_id].terminate()
     except Exception as e:
         print(e)
-
-
-
-
-
-
-# # def TileWorker(render, tile):
-# #     pool[getpid()] = self
-# #     tile = render()
-#
-# # https://stackoverflow.com/questions/10415028/how-can-i-recover-the-return-value-of-a-function-passed-to-multiprocessing-proce
-# def RenderTile():
-#     tile = None
-#     worker = multiprocessing.Process(target=TileWorker, args=(render, tile))
-#     worker.start()
-#     worker.join()
-#
-# def CancelTile(pid):
-#     pool[pid].terminate()

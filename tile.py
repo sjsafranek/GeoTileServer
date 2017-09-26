@@ -105,12 +105,11 @@ class TiledMapRenderer(object):
         self.m.buffer_size = max(self.m.buffer_size, MIN_BUFFER)
         # Render image with default Agg renderer
         im = mapnik.Image(TILE_WIDTH, TILE_WIDTH)
-        # mapnik.render(self.m, im)
+        mapnik.render(self.m, im)
         # Return image
 
         #  cancel requests -->
-        im = worker.RenderTile(job_id, self.m, im)
-
+        # im = worker.RenderTile(job_id, self.m, im)
         return im
 
     def cancelTile(self, job_id):
