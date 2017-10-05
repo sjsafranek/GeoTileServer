@@ -85,7 +85,7 @@ class TiledMapRenderer(object):
         lat_deg = math.degrees(lat_rad)
         return mapnik.Coord(y=lat_deg, x=lon_deg)
 
-    def renderTile(self, z, x, y, job_id):
+    def renderTile(self, z, x, y, job_id, responseHandler=None):
         """
         renders map tile
             :param z: Zoom level
@@ -105,11 +105,14 @@ class TiledMapRenderer(object):
         self.m.buffer_size = max(self.m.buffer_size, MIN_BUFFER)
         # Render image with default Agg renderer
         im = mapnik.Image(TILE_WIDTH, TILE_WIDTH)
-        mapnik.render(self.m, im)
-        # Return image
 
-        #  cancel requests -->
-        # im = worker.RenderTile(job_id, self.m, im)
+        if not responseHandler:
+            mapnik.render(self.m, im)
+            return im
+
+        # cancel requests -->
+        im = worker.RenderTile(job_id, self.m, im)
+        responseHandler.sendPngResponse(im)
         return im
 
     def cancelTile(self, job_id):

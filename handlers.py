@@ -112,7 +112,7 @@ class ApiRoot(BaseHandler):
         xml = ''
         xml += ('<?xml version="1.0" encoding="utf-8" ?>')
         xml += ('<Services>')
-        xml += (' <TileMapService title="Georeferenced Blueprint Tile Map Service" version="1.0" href="' + baseURL + '/1.0"/>')
+        xml += (' <TileMapService title="Tile Map Service" version="1.0" href="' + baseURL + '/1.0"/>')
         xml += ('</Services>')
         self.sendXmlResponse(xml)
 
@@ -153,12 +153,16 @@ class ApiTileMap(BaseHandler):
         xml += (' <TileFormat width="' + str(tile.TILE_WIDTH) + '" height="' + str(tile.TILE_HEIGHT) + '" ' + 'mime-type="image/png" extension="png"/>')
         xml += (' <TileSets profile="global-geodetic">')
         for zoomLevel in range(0, tile.MAX_ZOOM_LEVEL+1):
-            unitsPerPixel = _unitsPerPixel(zoomLevel)
+            unitsPerPixel = tile._unitsPerPixel(zoomLevel)
             xml += ('<TileSet href="' + baseURL + '/' + str(zoomLevel) + '" units-per-pixel="'+str(unitsPerPixel) + '" order="' + str(zoomLevel) + '"/>')
         xml += (' </TileSets>')
         xml += ('</TileMap>')
         self.sendXmlResponse(xml)
 
+
+class ApiTileError(BaseHandler):
+    def get(self, layer, **args):
+        self.write('Oops! Do you mean /tms/1.0/'+layer+'/{z}/{x}/{y}')
 
 
 class ApiTile(BaseHandler):
@@ -190,7 +194,7 @@ class ApiTile(BaseHandler):
         job_id = self.getRequestId()
 
         renderer = Maps.getMap(layer_id)
-        # im = renderer.renderTile(z, x, y, job_id)
+        # im = renderer.renderTile(z, x, y, job_id, responseHandler=self)
         im = renderer.renderTile(z, x, y, job_id)
         return im
 

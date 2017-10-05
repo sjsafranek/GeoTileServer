@@ -14,6 +14,8 @@ def router():
         (r'/tms', ApiRoot),
         (r'/tms/1.0', ApiService),
         (r'/tms/1.0/(?P<layer>[^\/]+)', ApiTileMap),
+        (r'/tms/1.0/(?P<layer>[^\/]+)/(?P<z>[^\/]+)', ApiTileError),
+        (r'/tms/1.0/(?P<layer>[^\/]+)/(?P<z>[^\/]+)/(?P<x>[^\/]+)', ApiTileError),
         (r'/tms/1.0/(?P<layer>[^\/]+)/(?P<z>[^\/]+)/(?P<x>[^\/]+)/(?P<y>[^\/]+)', ApiTile),
         (r'/tms/1.0/(?P<layer>[^\/]+)/(?P<z>[^\/]+)/(?P<x>[^\/]+)/(?P<y>[^\/]+).png', ApiTile),
     ], **settings)
